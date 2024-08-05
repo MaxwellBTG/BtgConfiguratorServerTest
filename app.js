@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const dotenv = require('dotenv');
 dotenv.config();
 const port = process.env.PORT || 5000;
-const email = process.env.USER_ID;
+const email = process.env.TEST_ID;
 
 app.use(cors());
 app.use(express.json({limit:"25mb"}));
@@ -18,77 +18,81 @@ app.use((req,res,next)=>{
 
 function sendEmail({
     requesterEmail,
+    clientName,
+    clientCompany,
+    clientLocation,
+    sDoorType,
+    sDoorConfig,
+    sHingePos,
+    sIsPaintedFinish,
+    sIsGalvanizedFinish,
+    sIsOtherFinish,
+    sOtherFinish,
+    sIsBoltOn,
+    sHasLockBar,
+    sMountingType,
+    sHeight,
+    sWidth,
+    sTopClearance,
+    sBottomClearance,
+    sLeftClearance,
+    sRightClearance,
     comment,
-    doorType,
-    doorConfig,
-    hingePos,
-    isPaintedFinish,
-    isGalvanizedFinish,
-    isOtherFinish,
-    otherFinish,
-    isBoltOn,
-    hasLockBar,
-    mountingType,
-    height,
-    width,
-    topClearance,
-    bottomClearance,
-    leftClearance,
-    rightClearance
+    Images
 }){
     return new Promise((resolve,reject)=>{
         var transporter = nodemailer.createTransport({
-            host: 'mail.smtp2go.com',
-            //host: 'smtp.ethereal.email',
+            //host: 'mail.smtp2go.com',
+            host: 'smtp.ethereal.email',
             port: 587,
             auth: {
                 user: email,
-                pass: process.env.USER_PW
+                pass: process.env.TEST_PW
             },
         })
 
         const QuotePrice = 1500;
 
         const configtext = 
-            doorType+";"+
-            doorConfig+";"+
-            hingePos+";"+
-            isPaintedFinish+";"+
-            isGalvanizedFinish+";"+
-            isOtherFinish+";"+
-            otherFinish+";"+
-            isBoltOn+";"+
-            hasLockBar+";"+
-            mountingType+";"+
-            height+";"+
-            width+";"+
-            topClearance+";"+
-            bottomClearance+";"+
-            leftClearance+";"+
-            rightClearance;
+            sDoorType+";"+
+            sDoorConfig+";"+
+            sHingePos+";"+
+            sIsPaintedFinish+";"+
+            sIsGalvanizedFinish+";"+
+            sIsOtherFinish+";"+
+            sOtherFinish+";"+
+            sIsBoltOn+";"+
+            sHasLockBar+";"+
+            sMountingType+";"+
+            sHeight+";"+
+            sWidth+";"+
+            sTopClearance+";"+
+            sBottomClearance+";"+
+            sLeftClearance+";"+
+            sRightClearance;
 
-        const mail_configs_client={
+        const  mail_configs_client={
             from: email,
             to: requesterEmail,
             bcc: email,
             subject: "Access & Inspection Door Inquiry",
             text: "This is auto generated email, do not reply. Received your access & inspection door configuration, our sales representative will contact you shortly.",
             html: `<p>This is auto auto generated email, do not reply. Received your access & inspection door configuration, our sales representative will contact you shortly.</p>
-            <p>Door Type: ${doorType}</p>
-            <p>Door Configuration: ${doorConfig}</p>
-            <p>Hinge Position: ${hingePos}</p>
-            <p>Is Painted?: ${isPaintedFinish}</p>
-            <p>Is Galvanized?: ${isGalvanizedFinish}</p>
-            ${isOtherFinish?`<p>Other Finishing: ${otherFinish}</p>`:''}
-            <p>Bolt-On Mesh: ${isBoltOn}</p>
-            <p>Lock Bar at rear: ${hasLockBar}</p>
-            <p>Mounting Type: ${mountingType}</p>
-            <p>Opening Height(mm): ${height}</p>
-            <p>Opening Width(mm): ${width}</p>
-            <p>Top Clearance(mm): ${topClearance}</p>
-            <p>Bottom Clearance(mm): ${bottomClearance}</p>
-            <p>Left Clearance(mm): ${leftClearance}</p>
-            <p>Right Clearance(mm): ${rightClearance}</p>
+            <p>Door Type: ${sDoorType}</p>
+            <p>Door Configuration: ${sDoorConfig}</p>
+            <p>Hinge Position: ${sHingePos}</p>
+            <p>Is Painted?: ${sIsPaintedFinish}</p>
+            <p>Is Galvanized?: ${sIsGalvanizedFinish}</p>
+            ${sIsOtherFinish?`<p>Other Finishing: ${sOtherFinish}</p>`:''}
+            <p>Bolt-On Mesh: ${sIsBoltOn}</p>
+            <p>Lock Bar at rear: ${sHasLockBar}</p>
+            <p>Mounting Type: ${sMountingType}</p>
+            <p>Opening Height(mm): ${sHeight}</p>
+            <p>Opening Width(mm): ${sWidth}</p>
+            <p>Top Clearance(mm): ${sTopClearance}</p>
+            <p>Bottom Clearance(mm): ${sBottomClearance}</p>
+            <p>Left Clearance(mm): ${sLeftClearance}</p>
+            <p>Right Clearance(mm): ${sRightClearance}</p>
             <p>Comment: ${comment}</p>
             `,
             attachments:[
@@ -105,23 +109,31 @@ function sendEmail({
             subject: "Access & Inspection Door Inquiry | Quotation",
             text: "This is auto auto generated email, do not reply. Access & Inspection Door request detail in attached.",
             html: `<p>This is auto auto generated email, do not reply. Access & Inspection Door request detail as below.</p>
+            <p>Name: ${clientName}</p>
+            <p>Company: ${clientCompany}</p>
+            <p>Location: ${clientLocation}</p>
             <p>Quote Price: $ ${QuotePrice}</p>
-            <p>Door Type: ${doorType}</p>
-            <p>Door Configuration: ${doorConfig}</p>
-            <p>Hinge Position: ${hingePos}</p>
-            <p>Is Painted?: ${isPaintedFinish}</p>
-            <p>Is Galvanized?: ${isGalvanizedFinish}</p>
-            ${isOtherFinish?`<p>Other Finishing: ${otherFinish}</p>`:''}
-            <p>Bolt-On Mesh: ${isBoltOn}</p>
-            <p>Lock Bar at rear: ${hasLockBar}</p>
-            <p>Mounting Type: ${mountingType}</p>
-            <p>Opening Height(mm): ${height}</p>
-            <p>Opening Width(mm): ${width}</p>
-            <p>Top Clearance(mm): ${topClearance}</p>
-            <p>Bottom Clearance(mm): ${bottomClearance}</p>
-            <p>Left Clearance(mm): ${leftClearance}</p>
-            <p>Right Clearance(mm): ${rightClearance}</p>
+            <p>Door Type: ${sDoorType}</p>
+            <p>Door Configuration: ${sDoorConfig}</p>
+            <p>Hinge Position: ${sHingePos}</p>
+            <p>Is Painted?: ${sIsPaintedFinish}</p>
+            <p>Is Galvanized?: ${sIsGalvanizedFinish}</p>
+            ${sIsOtherFinish?`<p>Other Finishing: ${sOtherFinish}</p>`:''}
+            <p>Bolt-On Mesh: ${sIsBoltOn}</p>
+            <p>Lock Bar at rear: ${sHasLockBar}</p>
+            <p>Mounting Type: ${sMountingType}</p>
+            <p>Opening Height(mm): ${sHeight}</p>
+            <p>Opening Width(mm): ${sWidth}</p>
+            <p>Top Clearance(mm): ${sTopClearance}</p>
+            <p>Bottom Clearance(mm): ${sBottomClearance}</p>
+            <p>Left Clearance(mm): ${sLeftClearance}</p>
+            <p>Right Clearance(mm): ${sRightClearance}</p>
             <p>Comment: ${comment}</p>
+            <p>Files attached: </p>
+            ${Images.map((image)=>(
+                    `<p href="${image}">${image}</p>`
+                )
+            )}
             `,
             attachments:[
                 {
