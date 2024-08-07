@@ -21,6 +21,7 @@ function sendEmail({
     clientName,
     clientCompany,
     clientLocation,
+    projectName,
     sDoorType,
     sDoorConfig,
     sHingePos,
@@ -42,8 +43,8 @@ function sendEmail({
 }){
     return new Promise((resolve,reject)=>{
         var transporter = nodemailer.createTransport({
-            //host: 'mail.smtp2go.com',
-            host: 'smtp.ethereal.email',
+            host: 'mail.smtp2go.com',
+            //host: 'smtp.ethereal.email',
             port: 587,
             auth: {
                 user: email,
@@ -78,6 +79,7 @@ function sendEmail({
             subject: "Access & Inspection Door Inquiry",
             text: "This is auto generated email, do not reply. Received your access & inspection door configuration, our sales representative will contact you shortly.",
             html: `<p>This is auto auto generated email, do not reply. Received your access & inspection door configuration, our sales representative will contact you shortly.</p>
+            <p>Project Name: ${projectName}</p>
             <p>Door Type: ${sDoorType}</p>
             <p>Door Configuration: ${sDoorConfig}</p>
             <p>Hinge Position: ${sHingePos}</p>
@@ -112,6 +114,7 @@ function sendEmail({
             <p>Name: ${clientName}</p>
             <p>Company: ${clientCompany}</p>
             <p>Location: ${clientLocation}</p>
+            <p>Project Name: ${projectName}</p>
             <p>Quote Price: $ ${QuotePrice}</p>
             <p>Door Type: ${sDoorType}</p>
             <p>Door Configuration: ${sDoorConfig}</p>
